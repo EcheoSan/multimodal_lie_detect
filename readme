@@ -1,0 +1,87 @@
+
+
+# 🎭 Multimodal Lie Detection System
+
+使用聲音、語意、臉部表情三種模式分析影片，推斷說話者是否說謊。
+
+## 📦 專案特色
+
+- **語音辨識**：OpenAI Whisper
+- **音訊情緒辨識**：Wav2Vec2 (`superb/wav2vec2-base-superb-er`)
+- **語意情緒辨識**：RoBERTa (`j-hartmann/emotion-english-distilroberta-base`)
+- **臉部情緒辨識**：DeepFace (FER model)
+- **相似度分析**：Cosine Similarity
+- **自動回退機制**：偵測 macOS MPS 裝置錯誤自動轉 CPU
+
+## 📂 專案結構
+
+```
+multimodal_lie_detect/
+├── multimodal_lie_detection_v11_MCPfallback.py  # 主程式
+├── batch_exe_v3.py                              # 批次分析腳本
+├── videos/                                      # 測試影片資料夾
+├── results/                                     # 輸出分析結果（每部影片 json + summary.csv）
+├── requirements.txt                             # 套件依賴
+├── .gitignore
+└── README.md
+```
+
+## 🔧 安裝
+
+```bash
+pip install -r requirements.txt
+```
+
+建議使用 Python 3.9 以上，並建立虛擬環境。
+
+---
+
+## 📼 單一影片分析
+
+```bash
+python multimodal_lie_detection_v11_MCPfallback.py videos/truth_001.mp4
+```
+
+結果會儲存為 `analysis_output.json`
+
+---
+
+## 🔁 批次分析影片
+
+```bash
+python batch_exe_v3.py
+```
+
+會分析 `videos/` 資料夾內所有 `.mp4`，將結果輸出為：
+
+- `results/影片名.json`
+- 匯總表格：`results/summary.csv`
+
+---
+
+## 🧪 測試影片命名規則
+
+| 類型   | 命名範例            |
+|--------|---------------------|
+| 真話   | `truth_001.mp4`     |
+| 假話   | `lie_001.mp4`       |
+
+---
+
+## 📊 結果說明
+
+每部影片會分析三組模態間相似度：
+
+- `audio_text_similarity`
+- `audio_facial_similarity`
+- `text_facial_similarity`
+
+並提供 `overall_consistent` 判斷（是否都超過閾值）。
+
+---
+
+## 🔮 後續規劃
+
+- 增加簡單機器學習分類器（根據相似度判斷真假）
+- 多模態加權系統
+- 支援更多語言與模型選擇
